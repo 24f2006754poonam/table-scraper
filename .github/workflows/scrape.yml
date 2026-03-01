@@ -1,23 +1,35 @@
 name: 'Table Sums - 24f2006754@ds.study.iitm.ac.in'
 
-on: [push]  # Runs every time you push code
+on: [push]
 
 jobs:
   scrape:
-    timeout-minutes: 15
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
-      - name: 'Install 24f2006754@ds.study.iitm.ac.in dependencies'
+      - name: 'Setup Node - 24f2006754@ds.study.iitm.ac.in'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: 'Install deps - 24f2006754@ds.study.iitm.ac.in'
         run: npm ci
       
-      - name: 'Run scraper - 24f2006754@ds.study.iitm.ac.in'
-        run: npx playwright test scrape.spec.ts
+      - name: 'Install Playwright browsers - 24f2006754@ds.study.iitm.ac.in'
+        run: npx playwright install --with-deps
       
-      - name: 'Upload logs - 24f2006754@ds.study.iitm.ac.in'
+      - name: 'List files for debug - 24f2006754@ds.study.iitm.ac.in'
+        run: ls -la tests/
+      
+      - name: 'Run scraper - 24f2006754@ds.study.iitm.ac.in'
+        run: npx playwright test scrape.spec.ts --reporter=line
+      
+      - name: 'Upload report - 24f2006754@ds.study.iitm.ac.in'
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: test-results/
+          path: playwright-report/
+
